@@ -1,6 +1,6 @@
-### 🤖 MARCEUSE-XMD v1.0
+### 🤖 MARCEUSE-XMD2❤️
 
-**MARCEUSE-XMD** is a powerful multi-device WhatsApp bot built using the [Baileys](https://github.com/WhiskeySockets/Baileys) library. It helps group admins manage members, automate tasks, and enhance engagement with fun and useful features.
+**MARCEUSE-XMD2❤️** is a powerful multi-device WhatsApp bot built using the [Baileys](https://github.com/WhiskeySockets/Baileys) library. It helps group admins manage members, automate tasks, and enhance engagement with fun and useful features.
 
 <div align="center">
   <a href="https://git.io/typing-svg">
@@ -10,7 +10,7 @@
 
 <div align="center">
   <a href="https://youtube.com/@Nicolaus Daniel">
-    <img src="https://files.catbox.moe/z0l0ey.jpg" alt="MARCEUSE-XMD😈" height="300">
+    <img src="https://files.catbox.moe/z0l0ey.jpg" alt="MARCEUSE-XMD2❤️" height="300">
   </a>
 </div>
 
