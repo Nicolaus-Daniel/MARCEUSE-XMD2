@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: MARCEUSE-XMD-2❤️
+    runtime: docker
+    plan: free
+    region: oregon
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_ID
+        value: "" # You can add your session ID here or leave it for pairing
+    healthCheckPath: /
+    autoDeploy: true
+
+# This configures the build to use your Dockerfile automatically
