@@ -1,6 +1,6 @@
- {
-  "kaka": "audios_audios_kaka.wav",
-  "hi": " autovoice_hi.mp3",
-  "bey": "autovoice_bye.mp3",
-  "hey": ""
+{
+  "hello": "menu.m4a",
+  "bye": "menu.m4a",
+  "bhai": "menu.m4a",
+  "arslan": "menu.m4a"
 }
