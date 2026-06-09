@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>MARCEUSE XMD - Pairing Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 30%, #0a0f1e, #03050a);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .glass-card {
+            background: rgba(12, 20, 30, 0.75);
+            backdrop-filter: blur(14px);
+            border-radius: 48px;
+            padding: 32px 28px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(0, 255, 150, 0.25);
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .icon {
+            font-size: 64px;
+            margin-bottom: 12px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #00ffaa, #00cc77);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .badge {
+            background: #00ff8822;
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 60px;
+            font-size: 0.7rem;
+            color: #00ffaa;
+            margin: 12px 0 20px 0;
+            border: 0.5px solid #00ff8844;
+        }
+
+        .input-field {
+            background: #0f172a;
+            border: 1.5px solid #1e2a3e;
+            border-radius: 60px;
+            padding: 14px 20px;
+            width: 100%;
+            color: white;
+            font-size: 1rem;
+            text-align: center;
+            font-weight: 500;
+            outline: none;
+            transition: 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .input-field:focus {
+            border-color: #00ffaa;
+            box-shadow: 0 0 0 3px rgba(0, 255, 170, 0.2);
+        }
+
+        .pair-btn {
+            background: linear-gradient(95deg, #00ffaa, #00cc77);
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 60px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #03050a;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .pair-btn:hover {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+
+        .pair-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .code-area {
+            margin-top: 28px;
+            background: #0b1020;
+            border-radius: 28px;
+            padding: 20px;
+            display: none;
+            border: 1px solid #00ffaa55;
+            animation: fadeUp 0.4s ease;
+        }
+
+        .code-label {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #00ffaa;
+            text-transform: uppercase;
+        }
+
+        .pair-code {
+            font-family: monospace;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: #00ffaa;
+            background: #03050a;
+            padding: 16px;
+            border-radius: 28px;
+            margin: 12px 0;
+            word-break: break-all;
+        }
+
+        .timer-text {
+            font-size: 0.7rem;
+            color: #ffbb44;
+        }
+
+        .info-text {
+            background: #00ff1110;
+            padding: 12px;
+            border-radius: 20px;
+            margin-top: 24px;
+            font-size: 0.7rem;
+            color: #8ca3ba;
+            text-align: left;
+        }
+
+        .loader {
+            display: none;
+            margin-top: 20px;
+            color: #00ffaa;
+            font-size: 0.8rem;
+        }
+
+        footer {
+            margin-top: 24px;
+            font-size: 0.6rem;
+            color: #4a5b7a;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-card">
+        <div class="icon">⚡🤖</div>
+        <h1>MARCEUSE XMD</h1>
+        <div class="badge">🔐 SECURE PAIRING SYSTEM</div>
+
+        <input type="tel" id="phone" class="input-field" placeholder="255758575032" autocomplete="off">
+
+        <button id="pairButton" class="pair-btn">🔗 REQUEST PAIRING CODE</button>
+
+        <div id="loadingSpinner" class="loader">⏳ Generating pairing code ...</div>
+
+        <div id="codeCard" class="code-area">
+            <div class="code-label">📲 YOUR PAIRING CODE</div>
+            <div id="codeDisplay" class="pair-code">------</div>
+            <div id="timerMsg" class="timer-text">⏱️ Expires in 60 seconds</div>
+        </div>
+
+        <div class="info-text">
+            ⚡ <strong>How to link your device</strong><br>
+            1. Open WhatsApp → Settings → Linked Devices<br>
+            2. Tap "Link a Device" → "Link with phone number"<br>
+            3. Enter the 8-digit code above
+        </div>
+
+        <footer>Owner: Nicolaus Daniel | © MARCEUSE XMD</footer>
+    </div>
+
+    <script>
+        let autoRefresh = null;
+
+        async function requestPairing() {
+            const phoneNumber = document.getElementById('phone').value.trim();
+            if (!phoneNumber) {
+                alert('Please enter your WhatsApp number (format: 2557xxxxxx)');
+                return;
+            }
+
+            const btn = document.getElementById('pairButton');
+            const loader = document.getElementById('loadingSpinner');
+            const codeCard = document.getElementById('codeCard');
+            
+            btn.disabled = true;
+            loader.style.display = 'block';
+            codeCard.style.display = 'none';
+            
+            if (autoRefresh) clearInterval(autoRefresh);
+            
+            try {
+                const response = await fetch('/api/pair', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ number: phoneNumber })
+                });
+                
+                const result = await response.json();
+                loader.style.display = 'none';
+                
+                if (result.success && result.code) {
+                    document.getElementById('codeDisplay').innerText = result.code;
+                    codeCard.style.display = 'block';
+                    startExpiryTimer(60);
+                    
+                    // auto refresh code every 4 seconds (just in case)
+                    autoRefresh = setInterval(async () => {
+                        const refreshRes = await fetch('/api/latest-code');
+                        const refreshData = await refreshRes.json();
+                        if (refreshData.code && refreshData.code !== document.getElementById('codeDisplay').innerText) {
+                            document.getElementById('codeDisplay').innerText = refreshData.code;
+                            startExpiryTimer(60);
+                        }
+                    }, 4500);
+                    
+                    // stop auto refresh after 2 mins
+                    setTimeout(() => {
+                        if (autoRefresh) clearInterval(autoRefresh);
+                    }, 120000);
+                } else {
+                    alert('Error: ' + (result.message || 'Try again later'));
+                }
+            } catch (err) {
+                loader.style.display = 'none';
+                alert('Network error. Make sure bot server is running.');
+            }
+            btn.disabled = false;
+        }
+        
+        function startExpiryTimer(seconds) {
+            let timeLeft = seconds;
+            const timerElem = document.getElementById('timerMsg');
+            const interval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft <= 0) {
+                    clearInterval(interval);
+                    timerElem.innerHTML = '⏰ Code expired. Request a new one.';
+                } else {
+                    timerElem.innerHTML = `⏱️ Code expires in ${timeLeft} seconds`;
+                }
+            }, 1000);
+            setTimeout(() => clearInterval(interval), seconds * 1000);
+        }
+        
+        document.getElementById('pairButton').addEventListener('click', requestPairing);
+    </script>
+</body>
+</html>
